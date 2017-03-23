@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>丁一专用搜书系统</title>
+    <style type="text/css">
+        #result{
+          font-family: "微软雅黑";
+          font-size: 12px;
+          color: grey;
+        }
+        #noresult{
+          font-size: 50px;
+        }
+    </style>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+        $(function(){
+          $(document).keyup(function(event){
+            if(event.keyCode ==13){
+              $("#btn").trigger("click");
+            }
+          });
+            $("#btn").click(function(){
+                $("#result").html("");
+                $("#noresult").html("");
+                var key = $("#inp").val();
+                $.ajax({
+                  url:"https://api.douban.com/v2/book/search",
+                  type:"get",
+                  dataType:"jsonp",
+                  jsonCallback:"aback",
+                  data:
+                  {
+                      q:key,
+                      count:"20"
+                  },
+                  success:function(response){
+                    var count = 20;
+                    var total = response.total;
+                    console.log(total);
+                    if(total <= count){
+                        var rcount = total;
+                        console.log("mu有20多个");
+                    }else{
+                        var rcount = 20;                        
+                        console.log("有20多个");
+                    }
+                      console.log(response);
+
+                      if(total == 0){
+                            console.log("cao");
+                            if(key == "日丁一"){
+                              $("#noresult").append("操你妈孙睿");
+                            }else{
+                              $("#noresult").append("啥鸡巴都没有");
+                            }
+                      }
+
+                      for(var i = 0;i<rcount;i++){
+                        console.log("1");
+                          var name = response.books[i].title,
+                              author = response.books[i].author["0"],
+                              price = response.books[i].price,
+                              image = response.books[i].images.small,
+                              jump = response.books[i].alt;
+                          var argum = [name,author,price,image,jump];
+                          // if(i == 0){
+                          //   console.log(typeof(argum[1]));
+                          // }
+                          for(var j = 0;j<argum.length;j++){
+                            // if(j == 1){
+                              if(argum[j] == undefined||argum[j] == ""){
+                                console.log("string"+typeof(argum[j]));
+                                  argum[j] = "暂无记录";
+                                  console.log(argum[j]);
+                              }                          
+                              else{
+                                console.log(typeof(argum[j])+"!!!!!!!!!!!");
+                              }
+                            // }
+                          }
+                          
+                          // $("body").append("<div class='include'></div>");
+                          
+                          $("#result").append("<div class='include'>书名："+argum[0]+"，作者："+argum[1]+"，价格："+argum[2]+"<br><a href='"+argum[4]+"' target=\"_blank\"><img src='"+argum[3]+"'><\/a><br><\/div>");
+                          $(".include").fadeIn(3000);
+                    }
+                  }
+                })
+            })
+          })
+    </script>
+ 
+</head>
+<body>
+<!-- HTML -->
+<h1>极其简陋的书籍检索1.0</h1>
+  <input type="text" id="inp" placeholder="输入书名"></input>
+  <button id="btn">点击搜索</button>
+  <div id="result">
+    <div id="pic"></div>
+  </div>
+  <div id="noresult">
+    <div id="pic"></div>
+  </div>
+</body>
+</html>
