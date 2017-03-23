@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        function a(){
+            var x = document.forms["form1"]["name1"].value;
+            var atpos = x.indexOf('@')
+            var dotpos = x.lastIndexOf('.');
+           // alert(x.indexOf('@'));
+            if(atpos < 1 || atpos+2 > dotpos||dotpos+2 >= x.length){
+                alert("wrong");
+                return false;
+            }
+            /*if (x == null || x == '')
+            {
+                alert("wrong");
+                return false;
+            }*/
+
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <form onsubmit="a()" name="form1" action="" method="post">
+            name:<input type="text" name="name1">
+            <input type="submit" value="OK">
+        </form>
+</body>
+</html>
